@@ -25,8 +25,8 @@
 
 // Constantes
 #define pinArduinoRaccordementSignalSW          2           // La pin D2 de l'Arduino recevra la ligne SW du module KY-040
-#define pinArduinoRaccordementSignalDTsoitB     3           // La pin D3 de l'Arduino recevra la ligne DT du module KY-040 (soit la ligne "B" de l'encodeur)
-#define pinArduinoRaccordementSignalCLKsoitA    4           // La pin D4 de l'Arduino recevra la ligne CLK du module KY-040 (soit la ligne "A" de l'encodeur)
+#define pinArduinoRaccordementSignalCLKsoitA    3           // La pin D3 de l'Arduino recevra la ligne CLK du module KY-040 (soit la ligne "A" de l'encodeur)
+#define pinArduinoRaccordementSignalDTsoitB     4           // La pin D4 de l'Arduino recevra la ligne DT du module KY-040 (soit la ligne "B" de l'encodeur)
 
 // Variables
 int compteur = 0;                   // Cette variable nous permettra de savoir combien de crans nous avons passés sur l'encodeur
