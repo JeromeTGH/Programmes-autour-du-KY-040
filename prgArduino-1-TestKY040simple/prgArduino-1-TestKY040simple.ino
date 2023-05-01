@@ -29,13 +29,11 @@
 #define pinArduinoRaccordementSignalCLKsoitA    4           // La pin D4 de l'Arduino recevra la ligne CLK du module KY-040 (soit la ligne "A" de l'encodeur)
 
 // Variables
-int compteur = 0;                           // Cette variable nous permettra de savoir combien de crans nous avons passés sur l'encodeur
-                                            // (sachant qu'on comptera dans le sens horaire, et décomptera dans le sens anti-horaire)
+int compteur = 0;                   // Cette variable nous permettra de savoir combien de crans nous avons passés sur l'encodeur
+                                    // (sachant qu'on comptera dans le sens horaire, et décomptera dans le sens anti-horaire)
 
-int etatPrecedentLigneSW        = HIGH;     // Cette variable nous permettra de stocker le dernier état de la ligne SW lue, afin de le comparer à l'actuel
-int etatPrecedentLigneCLKsoitA  = HIGH;     // Cette variable nous permettra de stocker le dernier état de la ligne CLK lue, afin de le comparer à l'actuel
-                                                    // Nota : j'ai mis HIGH par défaut, car les lignaux du KY-040, telles que câblées ici avec ce module,
-                                                    //        sont actives à l'état bas, donc, au repos à l'état haut (d'où le "HIGH")
+int etatPrecedentLigneSW;           // Cette variable nous permettra de stocker le dernier état de la ligne SW lue, afin de le comparer à l'actuel
+int etatPrecedentLigneCLKsoitA;     // Cette variable nous permettra de stocker le dernier état de la ligne CLK lue, afin de le comparer à l'actuel
 
 // ========================
 // Initialisation programme
@@ -56,6 +54,10 @@ void setup() {
     pinMode(pinArduinoRaccordementSignalDTsoitB, INPUT);
     pinMode(pinArduinoRaccordementSignalCLKsoitA, INPUT);
 
+    // Mémorisation de valeurs par défaut, pour le démarrage
+    etatPrecedentLigneSW = digitalRead(pinArduinoRaccordementSignalSW);
+    etatPrecedentLigneCLKsoitA = digitalRead(pinArduinoRaccordementSignalCLKsoitA);
+
     // Petite pause pour laisser se stabiliser les signaux, avant d'attaquer la boucle loop
     delay(200);
 
@@ -68,8 +70,8 @@ void setup() {
 void loop() {
 
     // Lecture des signaux du KY-040 arrivant sur l'arduino
-    int etatActuelDeLaLigneSW       = digitalRead(pinArduinoRaccordementSignalSW);
     int etatActuelDeLaLigneSCKsoitA = digitalRead(pinArduinoRaccordementSignalCLKsoitA);
+    int etatActuelDeLaLigneSW       = digitalRead(pinArduinoRaccordementSignalSW);
     int etatActuelDeLaLigneDTsoitB  = digitalRead(pinArduinoRaccordementSignalDTsoitB);
 
     // ******************************************
@@ -122,9 +124,12 @@ void loop() {
 
     }
 
-    // *********************************************************************************************************************************************
-    // Puis on reboucle … à l'infini ! (avec une petite pause au passage, ou filtrer au possible les "rebonds" des poussoirs internes de l'encodeur)
-    // *********************************************************************************************************************************************
-    delay(50);
+    // ********************************
+    // Puis on reboucle … à l'infini !
+    // ********************************
 
 }
+
+
+// Remarque de fin : sans système d'anti-rebond sur A (CLK) et B (DT), l'arduino peut très bien fausssement interpréter
+//                   des "signaux intermédiaires", et ainsi décompter au lieu de compter, ou vice-versa !
