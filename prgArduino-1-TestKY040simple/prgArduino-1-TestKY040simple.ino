@@ -58,6 +58,10 @@ void setup() {
     etatPrecedentLigneSW = digitalRead(pinArduinoRaccordementSignalSW);
     etatPrecedentLigneCLKsoitA = digitalRead(pinArduinoRaccordementSignalCLKsoitA);
 
+    // Affichage de la valeur initiale du compteur, sur le moniteur série
+    Serial.print(F("Valeur initiale du compteur = "));
+    Serial.println(compteur);
+
     // Petite pause pour laisser se stabiliser les signaux, avant d'attaquer la boucle loop
     delay(200);
 
@@ -131,5 +135,5 @@ void loop() {
 }
 
 
-// Remarque de fin : sans système d'anti-rebond sur A (CLK) et B (DT), l'arduino peut très bien fausssement interpréter
-//                   des "signaux intermédiaires", et ainsi décompter au lieu de compter, ou vice-versa !
+// Remarque de fin : sans système d'anti-rebond sur A (CLK), B (DT), ou SW, l'arduino peut très bien fausssement interpréter des
+//                   "signaux intermédiaires", et ainsi décompter au lieu de compter (ou vice-versa), ou afficher des impulsions qu'on a pas fait !
