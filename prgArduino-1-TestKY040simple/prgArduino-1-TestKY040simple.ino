@@ -29,8 +29,11 @@
 #define pinArduinoRaccordementSignalCLKsoitA    4           // La pin D4 de l'Arduino recevra la ligne CLK du module KY-040 (soit la ligne "A" de l'encodeur)
 
 // Variables
-int etatPrecedentLigneSW        = HIGH;    // Cette variable nous permettra de stocker le dernier état de la ligne SW lue, afin de le comparer à l'actuel
-int etatPrecedentLigneCLKsoitA  = HIGH;    // Cette variable nous permettra de stocker le dernier état de la ligne CLK lue, afin de le comparer à l'actuel
+int compteur = 0;                           // Cette variable nous permettra de savoir combien de crans nous avons passés sur l'encodeur
+                                            // (sachant qu'on comptera dans le sens horaire, et décomptera dans le sens anti-horaire)
+
+int etatPrecedentLigneSW        = HIGH;     // Cette variable nous permettra de stocker le dernier état de la ligne SW lue, afin de le comparer à l'actuel
+int etatPrecedentLigneCLKsoitA  = HIGH;     // Cette variable nous permettra de stocker le dernier état de la ligne CLK lue, afin de le comparer à l'actuel
                                                     // Nota : j'ai mis HIGH par défaut, car les lignaux du KY-040, telles que câblées ici avec ce module,
                                                     //        sont actives à l'état bas, donc, au repos à l'état haut (d'où le "HIGH")
 
@@ -67,15 +70,61 @@ void loop() {
     // Lecture des signaux du KY-040 arrivant sur l'arduino
     int etatActuelDeLaLigneSW       = digitalRead(pinArduinoRaccordementSignalSW);
     int etatActuelDeLaLigneSCKsoitA = digitalRead(pinArduinoRaccordementSignalCLKsoitA);
+    int etatActuelDeLaLigneDTsoitB  = digitalRead(pinArduinoRaccordementSignalDTsoitB);
 
+    // ******************************************
     // On regarde si le bouton SW a changé d'état
+    // ******************************************
     if(etatActuelDeLaLigneSW != etatPrecedentLigneSW) {
-        
+
+        // Si l'état de SW a changé, alors on mémorise son nouvel état
+        etatPrecedentLigneSW = etatActuelDeLaLigneSW;
+
+        // Puis on affiche le nouvel état de SW sur le moniteur série de l'IDE Arduino
+        if(etatActuelDeLaLigneSW == LOW)
+            Serial.println(F("Bouton SW appuyé"));
+        else
+            Serial.println(F("Bouton SW relâché"));
+
     }
 
+    // ****************************************************
     // On regarde si le bouton CLK (soit A) a changé d'état
+    // ****************************************************
     if(etatActuelDeLaLigneSCKsoitA != etatPrecedentLigneCLKsoitA) {
         
+        // Si l'état de CLK (A) a changé, alors on mémorise son nouvel état
+        etatPrecedentLigneCLKsoitA = etatActuelDeLaLigneSCKsoitA;
+
+        // On compare l'état de la ligne CLK (A) avec la ligne DT (B)
+        // ----------------------------------------------------------
+        // Nota : - si A est différent de B, alors cela veut dire que nous avons tourné l'encodeur dans le sens horaire
+        //        - si A est égal à B, alors cela veut dire que nous avons tourné l'encodeur dans le sens anti-horaire
+
+        if(etatActuelDeLaLigneSCKsoitA != etatActuelDeLaLigneDTsoitB) {
+            // A différent de B => cela veut dire que nous comptons dans le sens horaire
+            // Alors on incrémente le compteur
+            compteur++;
+
+            // Et on affiche ces infos sur le moniteur série
+            Serial.print(F("Sens = horaire | Valeur du compteur = "));
+            Serial.println(compteur);
+        }
+        else {
+            // A est identique à B => cela veut dire que nous comptons dans le sens antihoraire
+            // Alors on décrémente le compteur
+            compteur--;
+
+            // Et on affiche ces infos sur le moniteur série
+            Serial.print(F("Sens = antihoraire | Valeur du compteur = "));
+            Serial.println(compteur);
+        }
+
     }
+
+    // *********************************************************************************************************************************************
+    // Puis on reboucle … à l'infini ! (avec une petite pause au passage, ou filtrer au possible les "rebonds" des poussoirs internes de l'encodeur)
+    // *********************************************************************************************************************************************
+    delay(50);
 
 }
