@@ -65,8 +65,9 @@ void setup() {
     Serial.print(F("Valeur initiale du compteur = "));
     Serial.println(compteur);
 
-    // Activation d'interruption
+    // Activation d'interruptions sur les lignes CLK(A) et SW
     attachInterrupt(digitalPinToInterrupt(pinArduinoRaccordementSignalCLKsoitA), changementDetecteSurLigneCLKsoitA, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(pinArduinoRaccordementSignalSW), changementDetecteSurLigneSW, CHANGE);
 
 }
 
@@ -116,5 +117,25 @@ void changementDetecteSurLigneCLKsoitA() {
         Serial.print(F("Sens = antihoraire | Valeur du compteur = "));
         Serial.println(compteur);
     }
+
+}
+
+
+// ====================================================
+// Routine d'interruption : changementDetecteSurLigneSW
+// ====================================================
+void changementDetecteSurLigneSW() {
+
+    // On lit le nouvel état de la ligne SW
+    int etatActuelDeLaLigneSW = digitalRead(pinArduinoRaccordementSignalSW);
+
+    // On mémorise le nouvel état de la ligne SW, puisqu'il vient de changer (sans quoi nous ne serions pas dans cette routine d'interruption)
+    etatPrecedentLigneSW = etatActuelDeLaLigneSW;
+
+    // Puis on affiche le nouvel état de SW sur le moniteur série de l'IDE Arduino
+    if(etatActuelDeLaLigneSW == LOW)
+        Serial.println(F("Bouton SW appuyé"));
+    else
+        Serial.println(F("Bouton SW relâché"));
 
 }
