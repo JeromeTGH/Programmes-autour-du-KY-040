@@ -56,7 +56,7 @@ void setup() {
 
     // Mémorisation de valeurs par défaut, pour le démarrage
     etatPrecedentLigneSW = digitalRead(pinArduinoRaccordementSignalSW);
-    etatPrecedentLigneCLKsoitA = digitalRead(pinArduinoRaccordementSignalCLK);
+    etatPrecedentLigneCLK = digitalRead(pinArduinoRaccordementSignalCLK);
 
     // Affichage de la valeur initiale du compteur, sur le moniteur série
     Serial.print(F("Valeur initiale du compteur = "));
