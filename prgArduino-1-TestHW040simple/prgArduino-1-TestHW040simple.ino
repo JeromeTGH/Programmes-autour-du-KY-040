@@ -7,14 +7,14 @@
   \__|   \__,_|___||___|_|\___/|_| [_|    \____/|_|\___|\____\__\_|  \___/|_| |_|_|\__  |\__,_|\___|
                                                                                       | |
                                                                                       \_|
-  Fichier :       prgArduino-1-TestKY040simple.ino
+  Fichier :       pprgArduino-1-TestHW040simple.ino
   
-  Description :   Programme permettant de lire les états des lignes CLK, DT, et SW d'un encodeur rotatif KY-040,
+  Description :   Programme permettant de lire les états des lignes CLK, DT, et SW d'un encodeur rotatif HW-040,
                   d'effectuer un comptage du nombre de crans parcourus, de déterminer dans quel sens a été tourné
                   l'encodeur (sens horaire, ou anti-horaire), et d'afficher le tout sur le moniteur série de l'IDE Arduino
 
   Remarques :     - l'arduino utilisé ici sera un modèle Nano
-                  - les signaux CLK et SW, émanant du KY-040, seront scrutés en permanence ; et le programme réagira
+                  - les signaux CLK et SW, émanant du HW-040, seront scrutés en permanence ; et le programme réagira
                   à chaque changement de l'un d'entre eux
                                     
   Auteur :        Jérôme TOMSKI (https://passionelectronique.fr/)
@@ -23,9 +23,9 @@
 */
 
 // Constantes
-#define pinArduinoRaccordementSignalSW  2       // La pin D2 de l'Arduino recevra la ligne SW du module KY-040
-#define pinArduinoRaccordementSignalCLK 3       // La pin D3 de l'Arduino recevra la ligne CLK du module KY-040
-#define pinArduinoRaccordementSignalDT  4       // La pin D4 de l'Arduino recevra la ligne DT du module KY-040
+#define pinArduinoRaccordementSignalSW  2       // La pin D2 de l'Arduino recevra la ligne SW du module HW-040
+#define pinArduinoRaccordementSignalCLK 3       // La pin D3 de l'Arduino recevra la ligne CLK du module HW-040
+#define pinArduinoRaccordementSignalDT  4       // La pin D4 de l'Arduino recevra la ligne DT du module HW-040
 
 // Variables
 int compteur = 0;                   // Cette variable nous permettra de savoir combien de crans nous avons parcourus sur l'encodeur
@@ -42,15 +42,15 @@ void setup() {
     // Initialisation de la liaison série (arduino nano <-> PC)
     Serial.begin(9600);
     Serial.println(F("========================================================================="));
-    Serial.println(F("Exemple 1 (programme de test Arduino Nano <-> module KY-040, scrutant en "));
+    Serial.println(F("Exemple 1 (programme de test Arduino Nano <-> module HW-040, scrutant en "));
     Serial.println(F("           permanence certains changement d'états de lignes de l'encodeur"));
-    Serial.println(F("           KY-040, avec affichage des informations sur le moniteur série)"));
+    Serial.println(F("           HW-040, avec affichage des informations sur le moniteur série)"));
     Serial.println(F("========================================================================="));
     Serial.println("");
 
-    // Configuration des pins de notre Arduino Nano en "entrées", car elles recevront les signaux du KY-040
+    // Configuration des pins de notre Arduino Nano en "entrées", car elles recevront les signaux du HW-040
     pinMode(pinArduinoRaccordementSignalSW, INPUT);         // à remplacer par : pinMode(pinArduinoRaccordementSignalSW, INPUT_PULLUP);
-                                                            // si jamais votre module KY-040 n'est pas doté de résistance pull-up, au niveau de SW
+                                                            // si jamais votre module HW-040 n'est pas doté de résistance pull-up, au niveau de SW
     pinMode(pinArduinoRaccordementSignalDT, INPUT);
     pinMode(pinArduinoRaccordementSignalCLK, INPUT);
 
@@ -73,7 +73,7 @@ void setup() {
 // =================
 void loop() {
 
-    // Lecture des signaux du KY-040 arrivant sur l'arduino
+    // Lecture des signaux du HW-040 arrivant sur l'arduino
     int etatActuelDeLaLigneCLK = digitalRead(pinArduinoRaccordementSignalCLK);
     int etatActuelDeLaLigneSW  = digitalRead(pinArduinoRaccordementSignalSW);
     int etatActuelDeLaLigneDT  = digitalRead(pinArduinoRaccordementSignalDT);

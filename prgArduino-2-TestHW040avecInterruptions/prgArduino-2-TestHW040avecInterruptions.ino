@@ -7,9 +7,9 @@
   \__|   \__,_|___||___|_|\___/|_| [_|    \____/|_|\___|\____\__\_|  \___/|_| |_|_|\__  |\__,_|\___|
                                                                                       | |
                                                                                       \_|
-  Fichier :       prgArduino-2-TestKY040avecInterruptions.ino
+  Fichier :       prgArduino-2-TestHW040avecInterruptions.ino
   
-  Description :   Programme permettant de compter le nombre de crans tournés sur un encodeur KY-040,
+  Description :   Programme permettant de compter le nombre de crans tournés sur un encodeur HW-040,
                   de déterminer le sens de rotation, et d'afficher le tout sur le moniteur série, de
                   l'IDE Arduino.
                   de l'encodeur se fera via les entrées d'interruption arduino INT0 (rattaché à la
@@ -25,9 +25,9 @@
 */
 
 // Constantes
-#define pinArduinoRaccordementSignalSW  2       // La pin D2 de l'Arduino recevra la ligne SW du module KY-040
-#define pinArduinoRaccordementSignalCLK 3       // La pin D3 de l'Arduino recevra la ligne CLK du module KY-040
-#define pinArduinoRaccordementSignalDT  4       // La pin D4 de l'Arduino recevra la ligne DT du module KY-040
+#define pinArduinoRaccordementSignalSW  2       // La pin D2 de l'Arduino recevra la ligne SW du module HW-040
+#define pinArduinoRaccordementSignalCLK 3       // La pin D3 de l'Arduino recevra la ligne CLK du module HW-040
+#define pinArduinoRaccordementSignalDT  4       // La pin D4 de l'Arduino recevra la ligne DT du module HW-040
 
 // Variables
 int compteur = 0;                   // Cette variable nous permettra de compter combien de crans ont été parcourus, sur l'encodeur
@@ -44,15 +44,15 @@ void setup() {
     // Initialisation de la liaison série (arduino nano <-> PC)
     Serial.begin(9600);
     Serial.println(F("=========================================================================="));
-    Serial.println(F("Exemple 2 (programme de test Arduino Nano <-> module KY-040, utilisant les"));
+    Serial.println(F("Exemple 2 (programme de test Arduino Nano <-> module HW-040, utilisant les"));
     Serial.println(F("           interruptions Arduino INT0 et INT1, avec affichage du nombre de"));
     Serial.println(F("           crans parcourus sur l'encodeur, ainsi que le sens de rotation)"));
     Serial.println(F("========================================================================="));
     Serial.println("");
 
-    // Configuration de certaines pins de notre Arduino Nano en "entrées" (celles qui recevront les signaux du KY-040)
+    // Configuration de certaines pins de notre Arduino Nano en "entrées" (celles qui recevront les signaux du HW-040)
     pinMode(pinArduinoRaccordementSignalSW, INPUT);         // à remplacer par : pinMode(pinArduinoRaccordementSignalSW, INPUT_PULLUP);
-                                                            // si jamais votre module KY-040 n'est pas doté de résistance pull-up, au niveau de SW
+                                                            // si jamais votre module HW-040 n'est pas doté de résistance pull-up, au niveau de SW
     pinMode(pinArduinoRaccordementSignalDT, INPUT);
     pinMode(pinArduinoRaccordementSignalCLK, INPUT);
 
@@ -89,7 +89,7 @@ void loop() {
 // =====================================================
 void changementDetecteSurLigneCLK() {
 
-    // Lecture des signaux CLK et DT du KY-040, arrivant sur l'arduino
+    // Lecture des signaux CLK et DT du HW-040, arrivant sur l'arduino
     int etatActuelDeLaLigneCLK = digitalRead(pinArduinoRaccordementSignalCLK);
     int etatActuelDeLaLigneDT  = digitalRead(pinArduinoRaccordementSignalDT);
 
