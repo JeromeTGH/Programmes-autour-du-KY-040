@@ -9,14 +9,13 @@
                                                                                       \_|
   Fichier :       prgArduino-1-TestKY040simple.ino
   
-  Description :   Programme permettant de lire les états des lignes CLK(A), DT(B), et SW
-                  d'un encodeur rotatif EC11 monté en module KY-040, d'effectuer un comptage
-                  des pas effectués, d'indiquer dans quel sens a été tourné l'encodeur (sens horaire,
-                  ou anti-horaire), et d'afficher le tout sur le moniteur série de l'IDE Arduino
+  Description :   Programme permettant de lire les états des lignes CLK, DT, et SW d'un encodeur rotatif KY-040,
+                  d'effectuer un comptage du nombre de crans parcourus, de déterminer dans quel sens a été tourné
+                  l'encodeur (sens horaire, ou anti-horaire), et d'afficher le tout sur le moniteur série de l'IDE Arduino
 
-  Remarques :     - les signaux émanant du KY-040 seront scrutés en permanence, et le programme
-                  agira en conséquence, en cas de changement de certains d'entre eux
-                  - l'arduino utilisé ici sera un modèle Nano
+  Remarques :     - l'arduino utilisé ici sera un modèle Nano
+                  - les signaux CLK et SW, émanant du KY-040, seront scrutés en permanence ; et le programme réagira
+                  à chaque changement de l'un d'entre eux
                                     
   Auteur :        Jérôme TOMSKI (https://passionelectronique.fr/)
   Créé le :       01.05.2023
@@ -24,16 +23,16 @@
 */
 
 // Constantes
-#define pinArduinoRaccordementSignalSW          2           // La pin D2 de l'Arduino recevra la ligne SW du module KY-040
-#define pinArduinoRaccordementSignalCLKsoitA    3           // La pin D3 de l'Arduino recevra la ligne CLK du module KY-040 (soit la ligne "A" de l'encodeur)
-#define pinArduinoRaccordementSignalDTsoitB     4           // La pin D4 de l'Arduino recevra la ligne DT du module KY-040 (soit la ligne "B" de l'encodeur)
+#define pinArduinoRaccordementSignalSW  2       // La pin D2 de l'Arduino recevra la ligne SW du module KY-040
+#define pinArduinoRaccordementSignalCLK 3       // La pin D3 de l'Arduino recevra la ligne CLK du module KY-040
+#define pinArduinoRaccordementSignalDT  4       // La pin D4 de l'Arduino recevra la ligne DT du module KY-040
 
 // Variables
-int compteur = 0;                   // Cette variable nous permettra de savoir combien de crans nous avons passés sur l'encodeur
+int compteur = 0;                   // Cette variable nous permettra de savoir combien de crans nous avons parcourus sur l'encodeur
                                     // (sachant qu'on comptera dans le sens horaire, et décomptera dans le sens anti-horaire)
 
 int etatPrecedentLigneSW;           // Cette variable nous permettra de stocker le dernier état de la ligne SW lue, afin de le comparer à l'actuel
-int etatPrecedentLigneCLKsoitA;     // Cette variable nous permettra de stocker le dernier état de la ligne CLK lue, afin de le comparer à l'actuel
+int etatPrecedentLigneCLK;          // Cette variable nous permettra de stocker le dernier état de la ligne CLK lue, afin de le comparer à l'actuel
 
 // ========================
 // Initialisation programme
@@ -50,13 +49,14 @@ void setup() {
     Serial.println("");
 
     // Configuration des pins de notre Arduino Nano en "entrées", car elles recevront les signaux du KY-040
-    pinMode(pinArduinoRaccordementSignalSW, INPUT);
-    pinMode(pinArduinoRaccordementSignalDTsoitB, INPUT);
-    pinMode(pinArduinoRaccordementSignalCLKsoitA, INPUT);
+    pinMode(pinArduinoRaccordementSignalSW, INPUT);         // à remplacer par : pinMode(pinArduinoRaccordementSignalSW, INPUT_PULLUP);
+                                                            // si jamais votre module KY-040 n'est pas doté de résistance pull-up, au niveau de SW
+    pinMode(pinArduinoRaccordementSignalDT, INPUT);
+    pinMode(pinArduinoRaccordementSignalCLK, INPUT);
 
     // Mémorisation de valeurs par défaut, pour le démarrage
     etatPrecedentLigneSW = digitalRead(pinArduinoRaccordementSignalSW);
-    etatPrecedentLigneCLKsoitA = digitalRead(pinArduinoRaccordementSignalCLKsoitA);
+    etatPrecedentLigneCLKsoitA = digitalRead(pinArduinoRaccordementSignalCLK);
 
     // Affichage de la valeur initiale du compteur, sur le moniteur série
     Serial.print(F("Valeur initiale du compteur = "));
@@ -74,9 +74,9 @@ void setup() {
 void loop() {
 
     // Lecture des signaux du KY-040 arrivant sur l'arduino
-    int etatActuelDeLaLigneSCKsoitA = digitalRead(pinArduinoRaccordementSignalCLKsoitA);
-    int etatActuelDeLaLigneSW       = digitalRead(pinArduinoRaccordementSignalSW);
-    int etatActuelDeLaLigneDTsoitB  = digitalRead(pinArduinoRaccordementSignalDTsoitB);
+    int etatActuelDeLaLigneCLK = digitalRead(pinArduinoRaccordementSignalCLK);
+    int etatActuelDeLaLigneSW  = digitalRead(pinArduinoRaccordementSignalSW);
+    int etatActuelDeLaLigneDT  = digitalRead(pinArduinoRaccordementSignalDT);
 
     // ******************************************
     // On regarde si le bouton SW a changé d'état
@@ -94,21 +94,21 @@ void loop() {
 
     }
 
-    // ****************************************************
-    // On regarde si le bouton CLK (soit A) a changé d'état
-    // ****************************************************
-    if(etatActuelDeLaLigneSCKsoitA != etatPrecedentLigneCLKsoitA) {
+    // *******************************************
+    // On regarde si le bouton CLK a changé d'état
+    // *******************************************
+    if(etatActuelDeLaLigneCLK != etatPrecedentLigneCLK) {
         
-        // Si l'état de CLK (A) a changé, alors on mémorise son nouvel état
-        etatPrecedentLigneCLKsoitA = etatActuelDeLaLigneSCKsoitA;
+        // Si l'état de CLK a changé, alors on mémorise son nouvel état
+        etatPrecedentLigneCLK = etatActuelDeLaLigneCLK;
 
-        // On compare l'état de la ligne CLK (A) avec la ligne DT (B)
-        // ----------------------------------------------------------
-        // Nota : - si A est différent de B, alors cela veut dire que nous avons tourné l'encodeur dans le sens horaire
-        //        - si A est égal à B, alors cela veut dire que nous avons tourné l'encodeur dans le sens anti-horaire
+        // On compare l'état de la ligne CLK avec la ligne DT
+        // --------------------------------------------------
+        // Nota : - si CLK est différent de DT, alors cela veut dire que nous avons tourné l'encodeur dans le sens horaire
+        //        - si CLK est égal à DT, alors cela veut dire que nous avons tourné l'encodeur dans le sens anti-horaire
 
-        if(etatActuelDeLaLigneSCKsoitA != etatActuelDeLaLigneDTsoitB) {
-            // A différent de B => cela veut dire que nous comptons dans le sens horaire
+        if(etatActuelDeLaLigneCLK != etatActuelDeLaLigneDT) {
+            // CLK différent de DT => cela veut dire que nous comptons dans le sens horaire
             // Alors on incrémente le compteur
             compteur++;
 
@@ -117,7 +117,7 @@ void loop() {
             Serial.println(compteur);
         }
         else {
-            // A est identique à B => cela veut dire que nous comptons dans le sens antihoraire
+            // CLK est identique à DT => cela veut dire que nous comptons dans le sens antihoraire
             // Alors on décrémente le compteur
             compteur--;
 
@@ -135,5 +135,5 @@ void loop() {
 }
 
 
-// Remarque de fin : sans système d'anti-rebond sur A (CLK), B (DT), ou SW, l'arduino peut très bien fausssement interpréter des
-//                   "signaux intermédiaires", et ainsi décompter au lieu de compter (ou vice-versa), ou afficher des impulsions qu'on a pas fait !
+// Remarque de fin : sans système d'anti-rebond sur CLK, DT, ou SW, l'arduino peut très bien fausssement interpréter des "signaux intermédiaires",
+// et ainsi, décompter au lieu de compter (ou vice-versa), ou afficher des impulsions qu'on a pas fait !
