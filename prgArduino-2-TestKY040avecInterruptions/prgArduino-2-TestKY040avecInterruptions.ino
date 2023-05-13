@@ -20,7 +20,7 @@
                   aux entrées d'interruptions externes INT0 (D2) et INT1 (D3), natives sur arduino
                                     
   Auteur :        Jérôme TOMSKI (https://passionelectronique.fr/)
-  Créé le :       02.05.2023
+  Créé le :       13.05.2023
 
 */
 
