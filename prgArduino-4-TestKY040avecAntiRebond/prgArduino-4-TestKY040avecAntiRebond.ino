@@ -7,7 +7,7 @@
   \__|   \__,_|___||___|_|\___/|_| [_|    \____/|_|\___|\____\__\_|  \___/|_| |_|_|\__  |\__,_|\___|
                                                                                       | |
                                                                                       \_|
-  Fichier :       prgArduino-3-TestKY040avecAntiRebond.ino
+  Fichier :       prgArduino-4-TestKY040avecAntiRebond.ino
   
   Description :   Programme permettant de compter le nombre de crans tournés sur un encodeur KY-040, de
                   déterminer le sens de rotation, et d'afficher le tout sur le moniteur série, de l'IDE
