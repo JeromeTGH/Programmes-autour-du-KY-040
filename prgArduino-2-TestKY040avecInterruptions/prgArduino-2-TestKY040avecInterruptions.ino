@@ -12,11 +12,9 @@
   Description :   Programme permettant de compter le nombre de crans tournés sur un encodeur KY-040,
                   de déterminer le sens de rotation, et d'afficher le tout sur le moniteur série, de
                   l'IDE Arduino.
-                  de l'encodeur se fera via les entrées d'interruption arduino INT.0 (rattaché à la
-                  broche D2 de l'arduino) et INT.1 (rattaché à la broche D3 de l'arduino)
   
   Remarques :     - l'arduino utilisé ici sera un modèle Nano
-                  - le choix des broches D2 et D3 pour les interruption n'est pas anodin ; cela correspond
+                  - le choix des broches D2 et D3 pour les interruptions n'est pas anodin ; cela correspond
                   aux entrées d'interruptions externes INT0 (D2) et INT1 (D3), natives sur arduino
                                     
   Auteur :        Jérôme TOMSKI (https://passionelectronique.fr/)

@@ -123,7 +123,7 @@ void changementSurLigneCLK() {
         
     }
 
-    // Et on mémorise ces états actuels dans étant "les nouveaux anciens", pour le "tour suivant" !
+    // Et on mémorise ces états actuels comme étant "les nouveaux anciens", pour le "tour suivant" !
     etatPrecedentLigneCLK = etatActuelDeLaLigneCLK;
     etatPrecedentLigneDT = etatActuelDeLaLigneDT;
     
